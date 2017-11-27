@@ -19,11 +19,11 @@ namespace Serializer
         [NonSerialized] static int SerialNum = 0;
         [NonSerialized] public int PersonSerialNum;
 
-        public Person()
+        public Person(int personSerialNum)
         {
             SerialNum++;
             this.RecordingDate = DateTime.Now;
-            this.PersonSerialNum = SerialNum;
+            this.PersonSerialNum = personSerialNum;
         }
 
         public void Serialize()

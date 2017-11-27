@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace Serializer
 {
     public partial class Form1 : Form
     {
-        int personNum = 0;
+        int ShowPersonNum = 0;
+        int LastPersonNum = 0;
 
         public Form1()
         {
@@ -22,7 +24,13 @@ namespace Serializer
         private void Form1_Load(object sender, EventArgs e)
         {
             ShowPerson(1);
-            personNum++;
+            ShowPersonNum++;
+            int count = 99;
+            while (!File.Exists("Person" + count + ".dat") && count > 0)
+            {
+                count--;
+            }
+            LastPersonNum = count;
         }
 
         private void ShowPerson(int personNum)
@@ -39,28 +47,32 @@ namespace Serializer
                 textBox2.Text = "";
                 textBox3.Text = "";
             }
-
+            ShowPersonNum = personNum;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Person Person = new Person();
+            Person Person = new Person(LastPersonNum+1);
             Person.Name = textBox1.Text;
             Person.Address = textBox2.Text;
             Person.Phone = textBox3.Text;
             Person.Serialize();
+            LastPersonNum++;
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            ShowPerson(++personNum);
+            if (ShowPersonNum <= LastPersonNum)
+            {
+                ShowPerson(++ShowPersonNum);
+            }
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            if (personNum > 0)
+            if (ShowPersonNum > 1)
             {
-                ShowPerson(--personNum);
+                ShowPerson(--ShowPersonNum);
             }
         }
 
@@ -71,7 +83,7 @@ namespace Serializer
 
         private void btnLast_Click(object sender, EventArgs e)
         {
-
+            ShowPerson(LastPersonNum);
         }
     }
 }
